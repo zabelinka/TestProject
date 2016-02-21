@@ -1,4 +1,3 @@
-#include "mainwindow.h"
 #include <QApplication>
 #include <QDebug>
 #include <opencv2/opencv.hpp>
@@ -9,7 +8,7 @@
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
-    cv::VideoCapture cap(0);
+    cv::VideoCapture cap("drop.avi");
 
     cv::Mat frame;
     cv::namedWindow("video", 1);
