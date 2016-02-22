@@ -1,5 +1,5 @@
 #include <QApplication>
-#include <QDebug>
+#include <QtWidgets>
 #include <QLabel>
 #include <QImage>
 #include <QPixmap>
@@ -62,14 +62,23 @@ int main(int argc, char *argv[])
         return -1;
     }
 
+    // get frame from video to QPixmap
     Mat frame;
     cap >> frame;
-
     QPixmap image = cvMatToQPixmap(frame);
 
+    // create widget
+    QWidget window;
+    window.resize(320,520);
+
+    // label for frame in widget
     QLabel *lbl = new QLabel();
     lbl->setPixmap( image );
-    lbl->show();
+    QHBoxLayout *layout = new QHBoxLayout();
+    layout->addWidget(lbl);
+    window.setLayout(layout);
+    window.setWindowTitle(QApplication::translate("toplevel", "Top-level widget"));
+    window.show();
 
     return a.exec();
 }
