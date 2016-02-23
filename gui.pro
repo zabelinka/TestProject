@@ -15,4 +15,11 @@ INCLUDEPATH += /usr/local/include/opencv
 
 LIBS += -L/usr/local/lib -lopencv_core -lopencv_imgcodecs -lopencv_highgui -lopencv_videoio
 
-SOURCES += main.cpp
+SOURCES += main.cpp \
+    pip.cpp
+
+HEADERS += \
+    pip.h
+
+FORMS += \
+    pip.ui
