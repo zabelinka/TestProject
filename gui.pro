@@ -19,7 +19,8 @@ SOURCES += main.cpp \
     pip.cpp
 
 HEADERS += \
-    pip.h
+    pip.h \
+    videothread.h
 
 FORMS += \
     pip.ui
