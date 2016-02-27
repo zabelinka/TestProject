@@ -43,6 +43,11 @@ PiP::~PiP()
 
 void PiP::getNewFrame(cv::Mat frame){
     qDebug() << "I display frame " << frame.data;
+
+    QImage img= QImage((uchar*) frame.data, frame.cols, frame.rows, frame.step, QImage::Format_RGB888);
+    QPixmap pix = QPixmap::fromImage(img);
+
+    ui->label->setPixmap(pix);
 }
 
 
