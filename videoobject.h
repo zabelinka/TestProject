@@ -5,6 +5,7 @@
 #include <QString>
 #include <opencv2/highgui/highgui.hpp>
 #include <opencv2/videoio.hpp>
+#include "pip.h"
 
 using namespace cv;
 
@@ -23,16 +24,20 @@ private:
     QTimer *timer;
     Mat frame;
     int fps;
+    PiP* mainWidget;
+
 
 public:
-    // конструктор с параметром - имя видеофайла
-    VideoObject(std::string fileName);
+    // конструктор с параметрами - имя видеофайла и указатель на главный объект
+    VideoObject(std::string fileName, PiP *widget);
 public slots:
     void process();
 private slots:
     void readFrame();
 signals:
+    void updatedFrame(cv::Mat);
     void finished();
+
 };
 
 

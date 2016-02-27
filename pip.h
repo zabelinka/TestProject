@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include <QtCore>
+#include <opencv2/opencv.hpp>
 
 /* объект основного класса PiP
  * создает виджет
@@ -23,9 +24,13 @@ class PiP : public QMainWindow
 public:
     explicit PiP(QWidget *parent = 0);
     ~PiP();
+    void display();     // запускает дочерние потоки, отображает картинку
 
 private:
     Ui::PiP *ui;
+
+public slots:
+    void getNewFrame(cv::Mat);
 
 };
 

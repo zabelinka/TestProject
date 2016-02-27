@@ -12,9 +12,10 @@ PiP::PiP(QWidget *parent) :
     QThread* thread1 = new QThread();
     QThread* thread2 = new QThread();
 
-    VideoObject* video1 = new VideoObject("drop.avi");
-    VideoObject* video2 = new VideoObject("Sample.mp4");
+    VideoObject* video1 = new VideoObject("drop.avi", this);
+    VideoObject* video2 = new VideoObject("Sample.mp4", this);
 
+    // видеоОбъекты по потокам
     video1->moveToThread(thread1);
     video2->moveToThread(thread2);
 
@@ -31,8 +32,8 @@ PiP::PiP(QWidget *parent) :
     thread2->start();
 
 
-
 }
+
 
 PiP::~PiP()
 {
@@ -40,19 +41,8 @@ PiP::~PiP()
 }
 
 
+void PiP::getNewFrame(cv::Mat frame){
+    qDebug() << "I display frame " << frame.data;
+}
 
 
-
-
-/*
- * открытие видеоФайла, чтение его fps, присоединение его к таймеру и функции
- *
-    capture.open("drop.avi");   //open video
-    int fps = capture.get(CV_CAP_PROP_FPS);         // frame per second
-
-
-
-    timer = new QTimer(this);
-    connect(timer, SIGNAL(timeout()), this, SLOT(displayFrame()));      // connect the timer to the widget and to the method
-    timer->start(int(1000 / fps));
-*/
