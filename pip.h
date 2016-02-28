@@ -28,6 +28,9 @@ public:
 
 private:
     Ui::PiP *ui;
+    QImage *finalImage;
+    QSize mainImageSize;
+    QSize minorImageSize;
 
 public slots:
     void getNewFrame(cv::Mat);

@@ -30,6 +30,8 @@ private:
 public:
     // конструктор с параметрами - имя видеофайла и указатель на главный объект
     VideoObject(std::string fileName, PiP *widget);
+    QSize getSize();
+
 public slots:
     void process();
 private slots:

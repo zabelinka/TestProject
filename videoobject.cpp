@@ -7,8 +7,12 @@ VideoObject::VideoObject(std::string fileName, PiP *widget){
     mainWidget = widget;
 }
 
+QSize VideoObject::getSize(){
+    return QSize(capture.get(CV_CAP_PROP_FRAME_WIDTH), capture.get(CV_CAP_PROP_FRAME_HEIGHT));
+}
+
+
 void VideoObject::process(){
-    qDebug("I launch the timer ");
     // по срабатыванию таймера читается следующий кадр
     connect(timer, SIGNAL(timeout()), this, SLOT(readFrame()));      // connect the timer to the widget and to the method
     connect(this, SIGNAL(updatedFrame(cv::Mat)), mainWidget, SLOT(getNewFrame(cv::Mat)), Qt::DirectConnection);
@@ -20,7 +24,7 @@ void VideoObject::readFrame(){
     // get new frame
     capture >> frame;
 
-    // передача кадра в главный поток, если он есть
+    // передача кадра в главный поток, если видео не закончилось
     if (frame.data) {
         emit updatedFrame(frame);
     }
