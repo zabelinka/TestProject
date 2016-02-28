@@ -17,12 +17,12 @@ PiP::PiP(QWidget *parent) :
     mainImageSize = video1->getSize();
     minorImageSize = video2->getSize();
 
-    // изменяем размер окна и label по размеру главного видео
-    this->resize(mainImageSize);
-    ui->label->resize(mainImageSize);
+    // создаем пустое финальное изображение по размеру главного видео + ширина маленького видео
+    finalImage = new QImage(mainImageSize.width() + minorImageSize.width(), mainImageSize.height(), QImage::Format_RGB888);
 
-    // создаем пустое финальное изображение по размеру главного видео
-    finalImage = new QImage(mainImageSize.width(), mainImageSize.height(), QImage::Format_RGB888);
+    // изменяем размер окна и label по размеру главного видео
+    this->resize(finalImage->size() );
+    ui->label->resize(finalImage->size());
 
     // видеоОбъекты по потокам
     video1->moveToThread(thread1);
@@ -47,57 +47,45 @@ PiP::PiP(QWidget *parent) :
 PiP::~PiP()
 {
     delete ui;
+    delete finalImage;
 }
-
 
 void PiP::getNewFrame(cv::Mat frame){
 
-
-    qDebug() << frame.cols;
-
+    QImage* current = new QImage((uchar*) frame.data, frame.cols, frame.rows, frame.step, QImage::Format_RGB888);
     QRgb color;
-/*
-    if(frame.cols == 256){
 
-        QImage littleImage = QImage((uchar*) frame.data, frame.cols, frame.rows, frame.step, QImage::Format_RGB888);
-        for(int x = 0; x < frame.cols; x++){
-            for(int y = 0; y < frame.rows; y++){
-                color = littleImage.pixel(x, y);
-                finalImage.setPixel(x, y, color);
+
+    // если полученный кадр из ГЛАВНОГО изображения, то перерисовываем его часть
+    if(current->width() == mainImageSize.width()){
+        for(int x = 0; x < current->width(); x++){
+            for(int y = 0; y < current->height(); y++){
+                color = current->pixel(x, y);                                   // взять цвет у кадра
+                finalImage->setPixel(x + minorImageSize.width(), y, color);     // закрасить этим цветом соответствующий пиксель
             }
         }
     }
 
-    if(frame.cols == 1280){
-        QImage littleImage = QImage((uchar*) frame.data, frame.cols, frame.rows, frame.step, QImage::Format_RGB888);
-        for(int x = 256; x < frame.cols; x++){
-            for(int y = 0; y < 240; y++){
-                color = littleImage.pixel(x, y);
-                finalImage.setPixel(x, y, color);
-            }
-        }
-        for(int x = 0; x < 256; x++){
-            for(int y = 240; y < frame.rows; y++){
-                color = littleImage.pixel(x, y);
-                finalImage.setPixel(x, y, color);
-            }
-        }
-        for(int x = 256; x < frame.cols; x++){
-            for(int y = 240; y < frame.rows; y++){
-                color = littleImage.pixel(x, y);
-                finalImage.setPixel(x, y, color);
+    if(current->width() == minorImageSize.width()){
+        for(int x = 0; x < current->width(); x++){
+            for(int y = 0; y < current->height(); y++){
+                color = current->pixel(x, y);                                   // взять цвет у кадра
+                finalImage->setPixel(x, y, color);     // закрасить этим цветом соответствующий пиксель
             }
         }
     }
-*/
-    // QImage img= QImage((uchar*) frame.data, frame.cols, frame.rows, frame.step, QImage::Format_RGB888);
+
+
+    // qDebug() << frame.cols;
+
+
 
 
     //QPixmap pix = QPixmap::fromImage(img);
- //    QPixmap pix = QPixmap::fromImage(finalImage);
+    QPixmap pix = QPixmap::fromImage(*finalImage);
+    ui->label->setPixmap(pix);
 
-//   ui->label->setPixmap(pix);
-
+    delete current;
 
 }
 
