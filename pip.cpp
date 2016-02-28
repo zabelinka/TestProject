@@ -48,6 +48,8 @@ void PiP::getNewFrame(cv::Mat frame){
     QPixmap pix = QPixmap::fromImage(img);
 
     ui->label->setPixmap(pix);
+
+
 }
 
 

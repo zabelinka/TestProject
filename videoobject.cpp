@@ -11,17 +11,22 @@ void VideoObject::process(){
     qDebug("I launch the timer ");
     // по срабатыванию таймера читается следующий кадр
     connect(timer, SIGNAL(timeout()), this, SLOT(readFrame()));      // connect the timer to the widget and to the method
-    timer -> start(int(1000 / fps));        // int(1000 / fps)
+    connect(this, SIGNAL(updatedFrame(cv::Mat)), mainWidget, SLOT(getNewFrame(cv::Mat)), Qt::DirectConnection);
+    timer -> start(int(1000 / fps) );        // int(1000 / fps)
 
 }
 
 void VideoObject::readFrame(){
     // get new frame
     capture >> frame;
-    // qDebug() << QThread::currentThreadId();
-    connect(this, SIGNAL(updatedFrame(cv::Mat)), mainWidget, SLOT(getNewFrame(cv::Mat)), Qt::DirectConnection);
 
-    // передача кадра в главный поток
-    emit updatedFrame(frame);
+    // передача кадра в главный поток, если он есть
+    if (frame.data) {
+        emit updatedFrame(frame);
+    }
+    else {
+        emit finished();
+    }
+
 
 }
